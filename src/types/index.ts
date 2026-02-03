@@ -57,11 +57,11 @@ export type JobType = 'developer' | 'designer';
 export type JobStatus = 'active' | 'paused' | 'closed' | 'expired';
 
 // Submission field types that admin can choose from
-export type SubmissionFieldType = 
-  | 'project_video' 
-  | 'github_link' 
-  | 'figma_link' 
-  | 'live_demo_link' 
+export type SubmissionFieldType =
+  | 'project_video'
+  | 'github_link'
+  | 'figma_link'
+  | 'live_demo_link'
   | 'file_upload';
 
 export interface SubmissionField {
@@ -103,29 +103,29 @@ export interface Job {
 }
 
 // Internal Application Status (Admin sees all)
-export type InternalApplicationStatus = 
-  | 'applied' 
-  | 'screening' 
+export type InternalApplicationStatus =
+  | 'applied'
+  | 'screening'
   | 'potential'
   | 'waiting'
   | 'potentially_rejected'
-  | 'task_sent' 
-  | 'task_submitted' 
+  | 'task_sent'
+  | 'task_submitted'
   | 'task_reviewing'
   | 'forwarded_to_hr'
-  | 'interview' 
-  | 'offered' 
-  | 'rejected' 
+  | 'interview'
+  | 'offered'
+  | 'rejected'
   | 'hired';
 
 // External Application Status (Job seeker sees limited)
-export type ExternalApplicationStatus = 
-  | 'pending' 
-  | 'in_review' 
+export type ExternalApplicationStatus =
+  | 'pending'
+  | 'in_review'
   | 'task_assigned'
   | 'task_submitted'
   | 'waiting'
-  | 'hired' 
+  | 'hired'
   | 'rejected';
 
 // Status mapping from internal to external
@@ -249,4 +249,81 @@ export interface ApiEndpoint {
   description: string;
   requestBody?: string;
   response: string;
+}
+
+// User Profile (from API)
+export interface UserProfile {
+  id: number;
+  headline: string;
+  bio: string;
+  phone: string;
+  location: string;
+  website: string;
+  linkedin: string;
+  github: string;
+  portfolio: string;
+  skills: string[];
+  experience_years: number;
+  cv_file: string | null;
+  cv_filename: string;
+  created_at: string;
+  updated_at: string;
+}
+
+// Updated User interface to match API response
+export interface User {
+  id: number;
+  email: string;
+  username: string;
+  first_name: string;
+  last_name: string;
+  role: 'seeker' | 'stack_admin' | 'super_admin';
+  avatar: string | null;
+  is_email_verified: boolean;
+  is_blocked: boolean;
+  blocked_at: string | null;
+  blocked_reason: string;
+  google_id: string | null;
+  profile?: UserProfile;
+  created_at: string;
+  updated_at: string;
+}
+
+// Auth API Response Types
+export interface LoginResponse {
+  success: boolean;
+  message: string;
+  data: {
+    user: User;
+    tokens: {
+      access: string;
+      refresh: string;
+    };
+  };
+}
+
+export interface RegisterResponse {
+  success: boolean;
+  message: string;
+  data: {
+    user: User;
+    tokens: {
+      access: string;
+      refresh: string;
+    };
+  };
+}
+
+// Pagination Response
+export interface PaginatedResponse<T> {
+  success: boolean;
+  data: T[];
+  pagination: {
+    page: number;
+    page_size: number;
+    // backend sometimes returns `total` or `total_count` depending on endpoint
+    total?: number;
+    total_count?: number;
+    total_pages: number;
+  };
 }

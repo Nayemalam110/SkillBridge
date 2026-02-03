@@ -24,6 +24,7 @@ import { AdminJobs } from '@/pages/admin/Jobs';
 import { AdminApplications } from '@/pages/admin/Applications';
 import { AdminAdmins } from '@/pages/admin/Admins';
 import { AdminSettings } from '@/pages/admin/Settings';
+import { AdminHiredCandidates } from '@/pages/admin/HiredCandidates';
 
 // Stack Admin pages
 import { StackAdminDashboard } from '@/pages/stackadmin/Dashboard';
@@ -33,15 +34,15 @@ import { StackAdminTasks } from '@/pages/stackadmin/Tasks';
 
 function ProtectedRoute({ children, allowedRoles }: { children: React.ReactNode; allowedRoles: string[] }) {
   const { user, isAuthenticated } = useAuth();
-  
+
   if (!isAuthenticated) {
     return <Navigate to="/login" replace />;
   }
-  
+
   if (user && !allowedRoles.includes(user.role)) {
     return <Navigate to="/" replace />;
   }
-  
+
   return <>{children}</>;
 }
 
@@ -54,8 +55,17 @@ function AppRoutes() {
         <Route path="/" element={<PublicLayout><HomePage /></PublicLayout>} />
         <Route path="/jobs" element={<PublicLayout><JobsPage /></PublicLayout>} />
         <Route path="/jobs/:id" element={<PublicLayout><JobDetailPage /></PublicLayout>} />
-        <Route path="/login" element={<PublicLayout><LoginPage /></PublicLayout>} />
-        <Route path="/register" element={<PublicLayout><RegisterPage /></PublicLayout>} />
+
+        <Route path="/login" element={
+          <PublicRoute>
+            <PublicLayout><LoginPage /></PublicLayout>
+          </PublicRoute>
+        } />
+        <Route path="/register" element={
+          <PublicRoute>
+            <PublicLayout><RegisterPage /></PublicLayout>
+          </PublicRoute>
+        } />
 
         {/* Job Seeker routes */}
         <Route path="/dashboard" element={
@@ -115,6 +125,11 @@ function AppRoutes() {
             <DashboardLayout role="super_admin"><AdminSettings /></DashboardLayout>
           </ProtectedRoute>
         } />
+        <Route path="/admin/hired" element={
+          <ProtectedRoute allowedRoles={['super_admin']}>
+            <DashboardLayout role="super_admin"><AdminHiredCandidates /></DashboardLayout>
+          </ProtectedRoute>
+        } />
 
         {/* Stack Admin routes */}
         <Route path="/stack-admin" element={
@@ -135,6 +150,11 @@ function AppRoutes() {
         <Route path="/stack-admin/tasks" element={
           <ProtectedRoute allowedRoles={['stack_admin']}>
             <DashboardLayout role="stack_admin"><StackAdminTasks /></DashboardLayout>
+          </ProtectedRoute>
+        } />
+        <Route path="/stack-admin/hired" element={
+          <ProtectedRoute allowedRoles={['stack_admin']}>
+            <DashboardLayout role="stack_admin"><AdminHiredCandidates /></DashboardLayout>
           </ProtectedRoute>
         } />
 

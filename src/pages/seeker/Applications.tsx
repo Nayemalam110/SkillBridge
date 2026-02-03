@@ -14,7 +14,7 @@ export function SeekerApplications() {
   const { applications } = useSite();
   const [selectedApp, setSelectedApp] = useState<Application | null>(null);
 
-  const myApplications = applications.filter((app) => app.userId === user?.id);
+  const myApplications = applications.filter((app) => app.userId === user?.id && app.status !== 'hired');
 
   return (
     <div className="space-y-6">

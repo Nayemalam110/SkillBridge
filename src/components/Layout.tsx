@@ -15,6 +15,7 @@ import {
   FileText,
   ClipboardList,
   ChevronRight,
+  Award,
 } from 'lucide-react';
 
 interface LayoutProps {
@@ -31,6 +32,14 @@ export function PublicLayout({ children }: LayoutProps) {
     logout();
     navigate('/');
   };
+
+  if (!settings) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-slate-50">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-sky-500"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-sky-50">
@@ -60,8 +69,8 @@ export function PublicLayout({ children }: LayoutProps) {
                       user?.role === 'job_seeker'
                         ? '/dashboard'
                         : user?.role === 'super_admin'
-                        ? '/admin'
-                        : '/stack-admin'
+                          ? '/admin'
+                          : '/stack-admin'
                     }
                     className="px-4 py-2 text-slate-600 hover:text-sky-600 hover:bg-sky-50 rounded-lg transition-colors font-medium"
                   >
@@ -123,8 +132,8 @@ export function PublicLayout({ children }: LayoutProps) {
                       user?.role === 'job_seeker'
                         ? '/dashboard'
                         : user?.role === 'super_admin'
-                        ? '/admin'
-                        : '/stack-admin'
+                          ? '/admin'
+                          : '/stack-admin'
                     }
                     className="block px-4 py-2 text-slate-600 hover:text-sky-600 hover:bg-sky-50 rounded-lg"
                     onClick={() => setMenuOpen(false)}
@@ -176,7 +185,7 @@ export function PublicLayout({ children }: LayoutProps) {
                 </div>
                 <span className="text-lg font-bold">{settings.siteName}</span>
               </div>
-              <p className="text-slate-400 text-sm leading-relaxed">{settings.aboutContent.slice(0, 150)}...</p>
+              <p className="text-slate-400 text-sm leading-relaxed">{settings.aboutContent?.slice(0, 150)}...</p>
             </div>
             <div>
               <h3 className="font-semibold mb-4 text-sky-400">Quick Links</h3>
@@ -193,17 +202,17 @@ export function PublicLayout({ children }: LayoutProps) {
             <div>
               <h3 className="font-semibold mb-4 text-sky-400">Follow Us</h3>
               <div className="flex gap-3">
-                {settings.socialLinks.twitter && (
+                {settings.socialLinks?.twitter && (
                   <a href={settings.socialLinks.twitter} className="w-10 h-10 rounded-lg bg-slate-800 flex items-center justify-center text-slate-400 hover:bg-sky-600 hover:text-white transition-colors">
                     𝕏
                   </a>
                 )}
-                {settings.socialLinks.linkedin && (
+                {settings.socialLinks?.linkedin && (
                   <a href={settings.socialLinks.linkedin} className="w-10 h-10 rounded-lg bg-slate-800 flex items-center justify-center text-slate-400 hover:bg-sky-600 hover:text-white transition-colors">
                     in
                   </a>
                 )}
-                {settings.socialLinks.github && (
+                {settings.socialLinks?.github && (
                   <a href={settings.socialLinks.github} className="w-10 h-10 rounded-lg bg-slate-800 flex items-center justify-center text-slate-400 hover:bg-sky-600 hover:text-white transition-colors">
                     GH
                   </a>
@@ -237,6 +246,14 @@ export function DashboardLayout({ children, role }: DashboardLayoutProps) {
     navigate('/');
   };
 
+  if (!settings) {
+    return (
+      <div className="h-screen flex items-center justify-center bg-slate-50">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-sky-500"></div>
+      </div>
+    );
+  }
+
   const navItems = {
     job_seeker: [
       { icon: Home, label: 'Dashboard', path: '/dashboard' },
@@ -252,11 +269,13 @@ export function DashboardLayout({ children, role }: DashboardLayoutProps) {
       { icon: ClipboardList, label: 'Applications', path: '/admin/applications' },
       { icon: Users, label: 'Stack Admins', path: '/admin/admins' },
       { icon: Settings, label: 'Site Settings', path: '/admin/settings' },
+      { icon: Award, label: 'Hired Candidates', path: '/admin/hired' },
     ],
     stack_admin: [
       { icon: Home, label: 'Dashboard', path: '/stack-admin' },
       { icon: Briefcase, label: 'My Jobs', path: '/stack-admin/jobs' },
       { icon: ClipboardList, label: 'Applications', path: '/stack-admin/applications' },
+      { icon: Award, label: 'Hired Candidates', path: '/stack-admin/hired' },
       { icon: FileText, label: 'Tasks', path: '/stack-admin/tasks' },
     ],
   };
@@ -285,9 +304,8 @@ export function DashboardLayout({ children, role }: DashboardLayoutProps) {
     <div className="h-screen flex bg-slate-100">
       {/* Sidebar */}
       <aside
-        className={`fixed inset-y-0 left-0 z-50 w-72 bg-white shadow-xl transform transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:shadow-none ${
-          sidebarOpen ? 'translate-x-0' : '-translate-x-full'
-        }`}
+        className={`fixed inset-y-0 left-0 z-50 w-72 bg-white shadow-xl transform transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:shadow-none ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'
+          }`}
       >
         <div className="flex flex-col h-full">
           {/* Logo */}
@@ -313,11 +331,10 @@ export function DashboardLayout({ children, role }: DashboardLayoutProps) {
                   key={item.path}
                   to={item.path}
                   onClick={() => setSidebarOpen(false)}
-                  className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 ${
-                    isActive
-                      ? `bg-gradient-to-r ${roleColors[role]} text-white shadow-lg`
-                      : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
-                  }`}
+                  className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 ${isActive
+                    ? `bg-gradient-to-r ${roleColors[role]} text-white shadow-lg`
+                    : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
+                    }`}
                 >
                   <Icon className="h-5 w-5" />
                   <span className="font-medium">{item.label}</span>
@@ -367,8 +384,8 @@ export function DashboardLayout({ children, role }: DashboardLayoutProps) {
               </div>
               <span className="font-bold text-slate-800">{settings.siteName}</span>
             </div>
-            <button 
-              onClick={() => setSidebarOpen(!sidebarOpen)} 
+            <button
+              onClick={() => setSidebarOpen(!sidebarOpen)}
               className="p-2 rounded-lg hover:bg-slate-100"
             >
               {sidebarOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}

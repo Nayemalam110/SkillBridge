@@ -7,6 +7,14 @@ import { ArrowRight, Briefcase, Users, Code, Palette, CheckCircle, Sparkles, Zap
 export function HomePage() {
   const { settings, stacks, jobs } = useSite();
 
+  if (!settings) {
+    return (
+      <div className="min-h-[60vh] flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-sky-500"></div>
+      </div>
+    );
+  }
+
   const features = [
     {
       icon: Code,
@@ -43,11 +51,11 @@ export function HomePage() {
         <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-sky-900 to-indigo-900" />
         <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=1200')] bg-cover bg-center opacity-10" />
         <div className="absolute inset-0 bg-gradient-to-t from-slate-900/50 to-transparent" />
-        
+
         {/* Decorative elements */}
         <div className="absolute top-20 left-10 w-72 h-72 bg-sky-500/30 rounded-full blur-3xl" />
         <div className="absolute bottom-20 right-10 w-96 h-96 bg-indigo-500/20 rounded-full blur-3xl" />
-        
+
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 lg:py-36">
           <div className="max-w-3xl">
             <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur-sm rounded-full text-sky-300 text-sm font-medium mb-6 border border-white/10">
@@ -194,11 +202,10 @@ export function HomePage() {
                               <h3 className="font-bold text-lg text-slate-900">{job.title}</h3>
                               <p className="text-slate-600">{job.stackName}</p>
                             </div>
-                            <span className={`px-3 py-1 text-sm font-semibold rounded-lg ${
-                              job.type === 'developer' 
-                                ? 'bg-sky-50 text-sky-700' 
+                            <span className={`px-3 py-1 text-sm font-semibold rounded-lg ${job.type === 'developer'
+                                ? 'bg-sky-50 text-sky-700'
                                 : 'bg-pink-50 text-pink-700'
-                            }`}>
+                              }`}>
                               {job.type === 'developer' ? 'Developer' : 'Designer'}
                             </span>
                           </div>

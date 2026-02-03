@@ -18,7 +18,7 @@ export function SeekerDashboard() {
   const { user } = useAuth();
   const { applications, jobs } = useSite();
 
-  const myApplications = applications.filter((app) => app.userId === user?.id);
+  const myApplications = applications.filter((app) => app.userId === user?.id && app.status !== 'hired');
   const pendingTasks = myApplications.filter(
     (app) => app.task && ['pending', 'in_progress'].includes(app.task.status)
   );

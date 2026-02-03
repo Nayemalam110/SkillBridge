@@ -4,11 +4,11 @@ import { useAuth } from '@/contexts/AuthContext';
 import { Card, CardContent } from '@/components/ui/Card';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
-import { Briefcase, Sparkles } from 'lucide-react';
+import { Briefcase } from 'lucide-react';
 
 export function LoginPage() {
   const navigate = useNavigate();
-  const { login, switchUser } = useAuth();
+  const { login } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
@@ -19,10 +19,10 @@ export function LoginPage() {
     setError('');
     setLoading(true);
 
-    const success = await login(email, password);
-    setLoading(false);
-
-    if (success) {
+    try {
+      await login(email, password);
+      // user will be set in AuthContext and AppRoutes will redirect automatically
+      // or we can force redirect here if needed
       if (email.includes('superadmin')) {
         navigate('/admin');
       } else if (email.includes('admin')) {
@@ -30,19 +30,10 @@ export function LoginPage() {
       } else {
         navigate('/dashboard');
       }
-    } else {
-      setError('Invalid credentials');
-    }
-  };
-
-  const handleDemoLogin = (role: 'job_seeker' | 'super_admin' | 'stack_admin') => {
-    switchUser(role);
-    if (role === 'super_admin') {
-      navigate('/admin');
-    } else if (role === 'stack_admin') {
-      navigate('/stack-admin');
-    } else {
-      navigate('/dashboard');
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Invalid credentials');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -84,51 +75,7 @@ export function LoginPage() {
               </Button>
             </form>
 
-            <div className="mt-8">
-              <div className="relative">
-                <div className="absolute inset-0 flex items-center">
-                  <div className="w-full border-t border-slate-200" />
-                </div>
-                <div className="relative flex justify-center text-sm">
-                  <span className="px-4 bg-white text-slate-500 font-medium flex items-center gap-2">
-                    <Sparkles className="h-4 w-4 text-amber-500" />
-                    Quick Demo Access
-                  </span>
-                </div>
-              </div>
-              <div className="mt-6 space-y-3">
-                <Button
-                  variant="outline"
-                  className="w-full justify-center"
-                  onClick={() => handleDemoLogin('job_seeker')}
-                >
-                  <div className="w-6 h-6 rounded-lg bg-emerald-100 flex items-center justify-center mr-2">
-                    <span className="text-emerald-600 text-xs font-bold">JS</span>
-                  </div>
-                  Login as Job Seeker
-                </Button>
-                <Button
-                  variant="outline"
-                  className="w-full justify-center"
-                  onClick={() => handleDemoLogin('super_admin')}
-                >
-                  <div className="w-6 h-6 rounded-lg bg-violet-100 flex items-center justify-center mr-2">
-                    <span className="text-violet-600 text-xs font-bold">SA</span>
-                  </div>
-                  Login as Super Admin
-                </Button>
-                <Button
-                  variant="outline"
-                  className="w-full justify-center"
-                  onClick={() => handleDemoLogin('stack_admin')}
-                >
-                  <div className="w-6 h-6 rounded-lg bg-sky-100 flex items-center justify-center mr-2">
-                    <span className="text-sky-600 text-xs font-bold">AD</span>
-                  </div>
-                  Login as Stack Admin
-                </Button>
-              </div>
-            </div>
+
 
             <p className="mt-8 text-center text-sm text-slate-600">
               Don't have an account?{' '}

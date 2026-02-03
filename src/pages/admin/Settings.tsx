@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSite } from '@/contexts/SiteContext';
 import { Card, CardContent, CardHeader } from '@/components/ui/Card';
 import { Input, Textarea } from '@/components/ui/Input';
@@ -10,6 +10,21 @@ export function AdminSettings() {
   const [formData, setFormData] = useState(settings);
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
+
+  // Sync formData when settings are loaded
+  useEffect(() => {
+    if (settings && !formData) {
+      setFormData(settings);
+    }
+  }, [settings, formData]);
+
+  if (!settings || !formData) {
+    return (
+      <div className="min-h-[60vh] flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
