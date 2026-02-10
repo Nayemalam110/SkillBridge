@@ -102,8 +102,8 @@ export function AdminApplications() {
       title: taskForm.title,
       description: taskForm.description,
       requirements: taskForm.requirements.split('\n').filter(Boolean),
-      requiredFields: taskForm.requiredFields.length > 0 
-        ? taskForm.requiredFields 
+      requiredFields: taskForm.requiredFields.length > 0
+        ? taskForm.requiredFields
         : job?.submissionFields || [],
       deadline: deadline.toISOString(),
       deadlineDays: taskForm.deadlineDays,
@@ -123,15 +123,15 @@ export function AdminApplications() {
   };
 
   const handleExportSelected = () => {
-    const toExport = selectedApps.length > 0 
+    const toExport = selectedApps.length > 0
       ? applications.filter(a => selectedApps.includes(a.id))
       : filteredApps;
     exportToCSV(toExport);
   };
 
   const toggleAppSelection = (appId: string) => {
-    setSelectedApps(prev => 
-      prev.includes(appId) 
+    setSelectedApps(prev =>
+      prev.includes(appId)
         ? prev.filter(id => id !== appId)
         : [...prev, appId]
     );
@@ -231,7 +231,7 @@ export function AdminApplications() {
           const profile = getApplicantProfile(app.userId);
           const job = jobs.find((j) => j.id === app.jobId);
           const isSelected = selectedApps.includes(app.id);
-          
+
           return (
             <Card key={app.id} hover className={isSelected ? 'ring-2 ring-sky-500' : ''}>
               <CardContent className="p-6">
@@ -356,15 +356,14 @@ export function AdminApplications() {
 
                     {/* Task Info */}
                     {app.task && (
-                      <div className={`mt-4 p-4 rounded-xl border ${
-                        app.task.status === 'submitted' 
-                          ? 'bg-amber-50 border-amber-200' 
+                      <div className={`mt-4 p-4 rounded-xl border ${app.task.status === 'submitted'
+                          ? 'bg-amber-50 border-amber-200'
                           : app.task.status === 'approved'
-                          ? 'bg-emerald-50 border-emerald-200'
-                          : app.task.status === 'rejected'
-                          ? 'bg-red-50 border-red-200'
-                          : 'bg-sky-50 border-sky-200'
-                      }`}>
+                            ? 'bg-emerald-50 border-emerald-200'
+                            : app.task.status === 'rejected'
+                              ? 'bg-red-50 border-red-200'
+                              : 'bg-sky-50 border-sky-200'
+                        }`}>
                         <div className="flex items-center gap-2 mb-2">
                           {job?.type === 'designer' ? (
                             <Palette className="h-4 w-4 text-pink-600" />
@@ -372,11 +371,11 @@ export function AdminApplications() {
                             <Code className="h-4 w-4 text-indigo-600" />
                           )}
                           <span className="font-semibold text-slate-800">{app.task.title}</span>
-                          <Badge 
+                          <Badge
                             variant={
                               app.task.status === 'submitted' ? 'warning' :
-                              app.task.status === 'approved' ? 'success' :
-                              app.task.status === 'rejected' ? 'danger' : 'info'
+                                app.task.status === 'approved' ? 'success' :
+                                  app.task.status === 'rejected' ? 'danger' : 'info'
                             }
                             size="sm"
                           >
@@ -432,7 +431,14 @@ export function AdminApplications() {
                       <Eye className="h-4 w-4" />
                       View Details
                     </Button>
-                    <Button variant="outline" size="sm">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => {
+                        const url = app.cvUrl.startsWith('http') ? app.cvUrl : `http://localhost:3000${app.cvUrl}`;
+                        window.open(url, '_blank');
+                      }}
+                    >
                       <Download className="h-4 w-4" />
                       Download CV
                     </Button>
@@ -504,7 +510,7 @@ export function AdminApplications() {
       >
         {selectedApp && (() => {
           const profile = getApplicantProfile(selectedApp.userId);
-          
+
           return (
             <div className="space-y-6">
               {/* Applicant Header */}
@@ -536,9 +542,8 @@ export function AdminApplications() {
                       <button
                         key={star}
                         onClick={() => updateApplication(selectedApp.id, { rating: star })}
-                        className={`p-1 ${
-                          (selectedApp.rating || 0) >= star ? 'text-amber-500' : 'text-slate-300'
-                        }`}
+                        className={`p-1 ${(selectedApp.rating || 0) >= star ? 'text-amber-500' : 'text-slate-300'
+                          }`}
                       >
                         <Star className="h-5 w-5 fill-current" />
                       </button>

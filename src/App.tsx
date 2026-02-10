@@ -25,6 +25,7 @@ import { AdminApplications } from '@/pages/admin/Applications';
 import { AdminAdmins } from '@/pages/admin/Admins';
 import { AdminSettings } from '@/pages/admin/Settings';
 import { AdminHiredCandidates } from '@/pages/admin/HiredCandidates';
+import { AdminSeekers } from '@/pages/admin/Seekers';
 
 // Stack Admin pages
 import { StackAdminDashboard } from '@/pages/stackadmin/Dashboard';
@@ -33,7 +34,15 @@ import { StackAdminApplications } from '@/pages/stackadmin/Applications';
 import { StackAdminTasks } from '@/pages/stackadmin/Tasks';
 
 function ProtectedRoute({ children, allowedRoles }: { children: React.ReactNode; allowedRoles: string[] }) {
-  const { user, isAuthenticated } = useAuth();
+  const { user, isAuthenticated, isLoading } = useAuth();
+
+  if (isLoading) {
+    return (
+      <div className="h-screen flex items-center justify-center bg-slate-50">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-sky-500"></div>
+      </div>
+    );
+  }
 
   if (!isAuthenticated) {
     return <Navigate to="/login" replace />;
@@ -41,6 +50,19 @@ function ProtectedRoute({ children, allowedRoles }: { children: React.ReactNode;
 
   if (user && !allowedRoles.includes(user.role)) {
     return <Navigate to="/" replace />;
+  }
+
+  return <>{children}</>;
+}
+
+function PublicRoute({ children }: { children: React.ReactNode }) {
+  const { isAuthenticated, isLoading, user } = useAuth();
+
+  if (isLoading) return null;
+
+  if (isAuthenticated && user) {
+    const dashboardPath = user.role === 'job_seeker' ? '/dashboard' : user.role === 'super_admin' ? '/admin' : '/stack-admin';
+    return <Navigate to={dashboardPath} replace />;
   }
 
   return <>{children}</>;
@@ -123,6 +145,11 @@ function AppRoutes() {
         <Route path="/admin/settings" element={
           <ProtectedRoute allowedRoles={['super_admin']}>
             <DashboardLayout role="super_admin"><AdminSettings /></DashboardLayout>
+          </ProtectedRoute>
+        } />
+        <Route path="/admin/seekers" element={
+          <ProtectedRoute allowedRoles={['super_admin']}>
+            <DashboardLayout role="super_admin"><AdminSeekers /></DashboardLayout>
           </ProtectedRoute>
         } />
         <Route path="/admin/hired" element={

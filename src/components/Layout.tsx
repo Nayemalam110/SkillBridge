@@ -267,6 +267,7 @@ export function DashboardLayout({ children, role }: DashboardLayoutProps) {
       { icon: Layers, label: 'Tech Stacks', path: '/admin/stacks' },
       { icon: Briefcase, label: 'Jobs', path: '/admin/jobs' },
       { icon: ClipboardList, label: 'Applications', path: '/admin/applications' },
+      { icon: Users, label: 'Candidates', path: '/admin/seekers' },
       { icon: Users, label: 'Stack Admins', path: '/admin/admins' },
       { icon: Settings, label: 'Site Settings', path: '/admin/settings' },
       { icon: Award, label: 'Hired Candidates', path: '/admin/hired' },
